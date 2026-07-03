@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Waypoints — Goal Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app">
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark">◆</span>
+        <div>
+          <h1>Waypoints</h1>
+          <p class="tagline">Chart the route. Track the distance.</p>
+        </div>
+      </div>
+      <button class="btn-primary" id="openFormBtn">+ New Goal</button>
+    </header>
+
+    <section class="stats">
+      <div class="stat">
+        <span class="stat-num" id="statTotal">0</span>
+        <span class="stat-label">Goals</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="statDone">0</span>
+        <span class="stat-label">Reached</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num" id="statAvg">0%</span>
+        <span class="stat-label">Avg. progress</span>
+      </div>
+    </section>
+
+    <div class="form-overlay" id="formOverlay">
+      <form class="goal-form" id="goalForm">
+        <h2>Plot a new goal</h2>
+
+        <label for="titleInput">Goal</label>
+        <input type="text" id="titleInput" placeholder="e.g. Run a 10k" required>
+
+        <div class="form-row">
+          <div class="form-col">
+            <label for="categoryInput">Category</label>
+            <select id="categoryInput">
+              <option value="Personal">Personal</option>
+              <option value="Health">Health</option>
+              <option value="Career">Career</option>
+              <option value="Learning">Learning</option>
+              <option value="Finance">Finance</option>
+            </select>
+          </div>
+          <div class="form-col">
+            <label for="deadlineInput">Target date</label>
+            <input type="date" id="deadlineInput">
+          </div>
+        </div>
+
+        <label for="milestoneInput">First milestone (optional)</label>
+        <input type="text" id="milestoneInput" placeholder="e.g. Run a 5k without stopping">
+
+        <div class="form-actions">
+          <button type="button" class="btn-ghost" id="cancelFormBtn">Cancel</button>
+          <button type="submit" class="btn-primary">Add goal</button>
+        </div>
+      </form>
+    </div>
+
+    <main class="trail" id="trail"></main>
+
+    <p class="empty-state" id="emptyState">No goals plotted yet. Start your first waypoint.</p>
+
+  </div>
+
+<script src="script.js"></script>
+</body>
+</html>
