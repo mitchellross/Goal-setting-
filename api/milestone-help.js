@@ -105,7 +105,7 @@ module.exports = async function handler(req, res) {
         messages: [
           {
             role: "system",
-            content: "Give exactly two short, practical sentences to help a child complete a goal milestone. Use simple language, avoid private assumptions, and do not mention AI or research."
+            content: "Give exactly two short, practical sentences on how the user can make progress toward the stated milestone. Be specific, useful, and action-oriented; avoid private assumptions and do not mention AI."
           },
           {
             role: "user",
