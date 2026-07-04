@@ -156,6 +156,17 @@ body {
 
 .empty-state { display: none; text-align: center; color: var(--muted); font-size: 14px; margin-top: 40px; }
 
+.site-footer {
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 56px;
+  padding-top: 18px;
+  text-align: center;
+}
+
+.site-footer p { margin: 0; }
+
 @media (max-width: 520px) {
   .topbar { flex-direction: column; }
   .btn-primary { align-self: flex-start; }
