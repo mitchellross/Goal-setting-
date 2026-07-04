@@ -68,11 +68,11 @@ module.exports = async function handler(req, res) {
   }
 
   if (isRateLimited(req)) {
-    return res.status(429).json({ error: "Too many help requests. Try again in a minute." });
+    return res.status(429).json({ error: "Too many tip requests. Try again in a minute." });
   }
 
   if (!process.env.DEEPSEEK_API_KEY) {
-    return res.status(500).json({ error: "Help is not configured yet." });
+    return res.status(500).json({ error: "Tips are not configured yet." });
   }
 
   let body;
@@ -86,7 +86,7 @@ module.exports = async function handler(req, res) {
   const milestone = String(body.milestone || "").trim();
 
   if (!milestone || milestone.length > 200) {
-    return res.status(400).json({ error: "Choose a shorter sub-goal before asking for help." });
+    return res.status(400).json({ error: "Choose a shorter sub-goal before asking for tips." });
   }
 
   const controller = new AbortController();
@@ -120,20 +120,20 @@ module.exports = async function handler(req, res) {
     const data = await deepseekResponse.json().catch(() => ({}));
 
     if (!deepseekResponse.ok) {
-      return res.status(502).json({ error: "Help is not available right now." });
+      return res.status(502).json({ error: "Tips are not available right now." });
     }
 
     const suggestion = tidySuggestion(data.choices?.[0]?.message?.content);
 
     if (!suggestion) {
-      return res.status(502).json({ error: "Help is not available right now." });
+      return res.status(502).json({ error: "Tips are not available right now." });
     }
 
     return res.status(200).json({ suggestion });
   } catch (error) {
     const message = error.name === "AbortError"
-      ? "Help took too long. Try again in a minute."
-      : "Help is not available right now.";
+      ? "Tips took too long. Try again in a minute."
+      : "Tips are not available right now.";
     return res.status(502).json({ error: message });
   } finally {
     clearTimeout(timeout);

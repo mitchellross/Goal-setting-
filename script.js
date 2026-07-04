@@ -103,7 +103,7 @@ function renderGoalCard(goal) {
             <div class="milestone-actions">
               <button class="mini-btn" data-action="edit-milestone" title="Edit sub-goal">Edit</button>
               <button class="mini-btn danger" data-action="delete-milestone" title="Delete sub-goal">Delete</button>
-              <button class="mini-btn help" data-action="help-milestone" title="Get quick help">Help</button>
+              <button class="mini-btn help" data-action="help-milestone" title="Get quick tips">Tips</button>
             </div>
           </li>
         `).join("")}
@@ -233,7 +233,7 @@ async function getMilestoneHelp(goal, milestone, button) {
   const originalText = button.textContent;
   button.disabled = true;
   button.textContent = "...";
-  showHelpModal("Getting help", "Looking for a quick suggestion...");
+  showHelpModal("Getting tips", "Looking for a quick suggestion...");
 
   try {
     const response = await fetch("/api/milestone-help", {
@@ -248,12 +248,12 @@ async function getMilestoneHelp(goal, milestone, button) {
     const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-      throw new Error(data.error || "Help is not available right now.");
+      throw new Error(data.error || "Tips are not available right now.");
     }
 
     showHelpModal("Quick suggestions", data.suggestion || "Try breaking this into one small step you can do today.");
   } catch (error) {
-    showHelpModal("Help unavailable", error.message || "Try again in a minute.");
+    showHelpModal("Tips unavailable", error.message || "Try again in a minute.");
   } finally {
     button.disabled = false;
     button.textContent = originalText;
