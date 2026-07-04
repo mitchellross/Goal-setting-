@@ -113,6 +113,9 @@ body {
 }
 .mini-btn:hover { border-color: var(--primary); color: var(--primary-dark); }
 .mini-btn.danger:hover { border-color: var(--danger); color: var(--danger); background: rgba(180, 85, 61, 0.08); }
+.mini-btn.help { color: var(--primary-dark); }
+.mini-btn.help:hover { background: rgba(47, 93, 76, 0.1); }
+.mini-btn:disabled { cursor: wait; opacity: 0.65; }
 .mini-btn.save { background: var(--primary); border-color: var(--primary); color: #fff; }
 .milestone.editing { align-items: stretch; }
 .milestone-edit-input {
@@ -138,6 +141,18 @@ body {
   display: none; align-items: center; justify-content: center; padding: 24px; z-index: 10;
 }
 .form-overlay.open { display: flex; }
+.help-overlay {
+  position: fixed; inset: 0; background: rgba(33, 40, 31, 0.45);
+  display: none; align-items: center; justify-content: center; padding: 24px; z-index: 20;
+}
+.help-overlay.open { display: flex; }
+.help-modal {
+  background: var(--surface); border-radius: 18px; box-shadow: 0 20px 60px rgba(33, 40, 31, 0.25);
+  display: flex; flex-direction: column; gap: 14px; max-width: 420px; padding: 28px; width: 100%;
+}
+.help-modal h2 { font-family: var(--font-display); font-size: 22px; margin: 0; }
+.help-modal p { color: var(--ink); font-size: 15px; line-height: 1.5; margin: 0; }
+.help-modal .btn-primary { align-self: flex-end; }
 .goal-form {
   background: var(--surface); border-radius: 18px; padding: 28px; width: 100%; max-width: 420px;
   display: flex; flex-direction: column; gap: 6px; box-shadow: 0 20px 60px rgba(33, 40, 31, 0.25);
