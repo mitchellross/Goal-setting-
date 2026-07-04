@@ -1,4 +1,4 @@
-let goals = [
+let goals = JSON.parse(localStorage.getItem("goals")) || [];
   {
     id: crypto.randomUUID(),
     title: "Run a 10k",
@@ -103,7 +103,8 @@ function renderGoalCard(goal) {
   `;
 
   card.querySelector('[data-action="delete"]').addEventListener("click", () => {
-    goals = goals.filter(g => g.id !== goal.id);
+  goals = goals.filter(g => g.id !== id);
+localStorage.setItem("goals", JSON.stringify(goals));
     render();
   });
 
@@ -168,7 +169,8 @@ goalForm.addEventListener("submit", e => {
 
   if (!title) return;
 
-  goals.push({
+goals.push(newGoal);
+localStorage.setItem("goals", JSON.stringify(goals));
     id: crypto.randomUUID(),
     title,
     category,
@@ -177,7 +179,7 @@ goalForm.addEventListener("submit", e => {
       ? [{ id: crypto.randomUUID(), text: milestoneText, done: false }]
       : []
   });
-
+localStorage.setItem("goals", JSON.stringify(goals));
   closeForm();
   render();
 });
