@@ -15,6 +15,10 @@ const titleInput = document.getElementById("titleInput");
 const categoryInput = document.getElementById("categoryInput");
 const deadlineInput = document.getElementById("deadlineInput");
 const milestoneInput = document.getElementById("milestoneInput");
+const helpOverlay = document.getElementById("helpOverlay");
+const helpTitle = document.getElementById("helpTitle");
+const helpText = document.getElementById("helpText");
+const closeHelpBtn = document.getElementById("closeHelpBtn");
 
 const statTotal = document.getElementById("statTotal");
 const statDone = document.getElementById("statDone");
@@ -99,6 +103,7 @@ function renderGoalCard(goal) {
             <div class="milestone-actions">
               <button class="mini-btn" data-action="edit-milestone" title="Edit sub-goal">Edit</button>
               <button class="mini-btn danger" data-action="delete-milestone" title="Delete sub-goal">Delete</button>
+              <button class="mini-btn help" data-action="help-milestone" title="Get quick help">Help</button>
             </div>
           </li>
         `).join("")}
@@ -144,6 +149,14 @@ function renderGoalCard(goal) {
       goal.milestones = goal.milestones.filter(m => m.id !== li.dataset.milestoneId);
       saveGoals();
       render();
+    });
+  });
+
+  card.querySelectorAll('[data-action="help-milestone"]').forEach(btn => {
+    btn.addEventListener("click", () => {
+      const li = btn.closest("[data-milestone-id]");
+      const milestone = goal.milestones.find(m => m.id === li.dataset.milestoneId);
+      getMilestoneHelp(goal, milestone, btn);
     });
   });
 
@@ -214,6 +227,51 @@ function renderMilestoneEditor(li, milestone, goal) {
   });
 }
 
+async function getMilestoneHelp(goal, milestone, button) {
+  if (!milestone) return;
+
+  const originalText = button.textContent;
+  button.disabled = true;
+  button.textContent = "...";
+  showHelpModal("Getting help", "Looking for a quick suggestion...");
+
+  try {
+    const response = await fetch("/api/milestone-help", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        goal: goal.title,
+        milestone: milestone.text
+      })
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(data.error || "Help is not available right now.");
+    }
+
+    showHelpModal("Quick suggestions", data.suggestion || "Try breaking this into one small step you can do today.");
+  } catch (error) {
+    showHelpModal("Help unavailable", error.message || "Try again in a minute.");
+  } finally {
+    button.disabled = false;
+    button.textContent = originalText;
+  }
+}
+
+function showHelpModal(title, text) {
+  helpTitle.textContent = title;
+  helpText.textContent = text;
+  helpOverlay.classList.add("open");
+  helpOverlay.setAttribute("aria-hidden", "false");
+}
+
+function closeHelpModal() {
+  helpOverlay.classList.remove("open");
+  helpOverlay.setAttribute("aria-hidden", "true");
+}
+
 function escapeHtml(str) {
   const div = document.createElement("div");
   div.textContent = str;
@@ -252,6 +310,10 @@ openFormBtn.addEventListener("click", () => openGoalForm());
 cancelFormBtn.addEventListener("click", closeForm);
 formOverlay.addEventListener("click", e => {
   if (e.target === formOverlay) closeForm();
+});
+closeHelpBtn.addEventListener("click", closeHelpModal);
+helpOverlay.addEventListener("click", e => {
+  if (e.target === helpOverlay) closeHelpModal();
 });
 
 goalForm.addEventListener("submit", e => {
