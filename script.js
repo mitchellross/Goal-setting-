@@ -1,17 +1,4 @@
 let goals = JSON.parse(localStorage.getItem("goals")) || [];
-  {
-    id: crypto.randomUUID(),
-    title: "Run a 10k",
-    category: "Health",
-    deadline: "",
-    milestones: [
-      { id: crypto.randomUUID(), text: "Run a 5k without stopping", done: true },
-      { id: crypto.randomUUID(), text: "Run 7k comfortably", done: false },
-      { id: crypto.randomUUID(), text: "Complete the 10k", done: false }
-    ]
-  }
-];
-
 const trailEl = document.getElementById("trail");
 const emptyStateEl = document.getElementById("emptyState");
 const formOverlay = document.getElementById("formOverlay");
@@ -102,39 +89,47 @@ function renderGoalCard(goal) {
     </div>
   `;
 
-  card.querySelector('[data-action="delete"]').addEventListener("click", () => {
-  goals = goals.filter(g => g.id !== id);
-localStorage.setItem("goals", JSON.stringify(goals));
-    render();
-  });
+card.querySelector('[data-action="delete"]').addEventListener("click", () => {
+  goals = goals.filter(g => g.id !== goal.id);
+  localStorage.setItem("goals", JSON.stringify(goals));
+  render();
+});
 
   card.querySelectorAll('[data-action="toggle-milestone"]').forEach(cb => {
     cb.addEventListener("change", () => {
       const li = cb.closest("[data-milestone-id]");
       const milestone = goal.milestones.find(m => m.id === li.dataset.milestoneId);
-      milestone.done = cb.checked;
-      render();
+    milestone.done = cb.checked;
+localStorage.setItem("goals", JSON.stringify(goals));
+render();
     });
   });
 
   const milestoneInput = card.querySelector('[data-action="milestone-input"]');
   const addMilestoneBtn = card.querySelector('[data-action="add-milestone"]');
 
-  function addMilestone() {
-    const text = milestoneInput.value.trim();
-    if (!text) return;
-    goal.milestones.push({ id: crypto.randomUUID(), text, done: false });
-    render();
-  }
+function addMilestone() {
+  const text = milestoneInput.value.trim();
+  if (!text) return;
 
-  addMilestoneBtn.addEventListener("click", addMilestone);
-  milestoneInput.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      addMilestone();
-    }
+  goal.milestones.push({
+    id: crypto.randomUUID(),
+    text,
+    done: false
   });
 
+  localStorage.setItem("goals", JSON.stringify(goals));
+  render();
+}
+  addMilestoneBtn.addEventListener("click", addMilestone);
+
+milestoneInput.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    addMilestone();
+  }
+});
+  
   return card;
 }
 
@@ -169,19 +164,22 @@ goalForm.addEventListener("submit", e => {
 
   if (!title) return;
 
+const newGoal = {
+  id: crypto.randomUUID(),
+  title,
+  category,
+  deadline,
+  milestones: milestoneText
+    ? [{ id: crypto.randomUUID(), text: milestoneText, done: false }]
+    : []
+};
+
 goals.push(newGoal);
 localStorage.setItem("goals", JSON.stringify(goals));
-    id: crypto.randomUUID(),
-    title,
-    category,
-    deadline,
-    milestones: milestoneText
-      ? [{ id: crypto.randomUUID(), text: milestoneText, done: false }]
-      : []
-  });
+
 localStorage.setItem("goals", JSON.stringify(goals));
-  closeForm();
-  render();
+closeForm();
+render();
 });
 
 render();
